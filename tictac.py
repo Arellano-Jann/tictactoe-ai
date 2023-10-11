@@ -25,10 +25,11 @@ class TicTacToe:
             return board
             
         def eval_win(board):
-            lines = board # calc row
-            + [list(row) for row in zip(*self.board)] # calc column
-            + [[self.board[i][i] for i in range(3)]] # diag 1
-            + [[self.board[i][2-i] for i in range(3)]] # diag 2
+            lines = board + [list(row) for row in zip(*board)] + [[board[i][i] for i in range(3)]] + [[board[i][2-i] for i in range(3)]]
+            # board # calc row
+            # + [list(row) for row in zip(*board)] # calc column
+            # + [[board[i][i] for i in range(3)]] # diag 1
+            # + [[board[i][2-i] for i in range(3)]] # diag 2
             if [1, 1, 1] in lines:
                 return 1 # 1 wins
             elif [-1, -1, -1] in lines:
@@ -37,7 +38,7 @@ class TicTacToe:
             
         def is_terminal(board): # returns True if a board is in it's last stage
             winner = eval_win(board)
-            if winner == 0 and len(possible_moves()) == 0: # if no one has won and there are no more moves left, then draw
+            if winner == 0 and len(possible_moves(board)) == 0: # if no one has won and there are no more moves left, then draw
                 return True
             elif winner == 0:
                 return False
@@ -51,7 +52,7 @@ class TicTacToe:
                         move_list.append([x, y])
             return move_list
         
-        def minimax(player, board): # determines the best move
+        def minimax(player=self.player, board=self.board): # determines the best move
             if is_terminal(board):
                 print("Winner:", winner)
                 return winner
@@ -72,7 +73,7 @@ class TicTacToe:
                         )
                 return value
             
-        minimax(self.player, self.board)
+        minimax()
         return self.board, winner
 
 def load_board( filename ):
