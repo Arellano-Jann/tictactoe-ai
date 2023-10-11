@@ -61,7 +61,7 @@ class TicTacToe:
                 for move in possible_moves(board):
                     value = max(
                         value, 
-                        minimax(-1, place_marker(board, self.player, move[0], move[1]))
+                        minimax(-1, place_marker(board, player, move[0], move[1]))
                         )
                 return value
             elif player == -1: # GOAL: make value smallest
@@ -69,7 +69,7 @@ class TicTacToe:
                 for move in possible_moves(board):
                     value = min(
                         value, 
-                        minimax(1, place_marker(board, self.player, move[0], move[1]))
+                        minimax(1, place_marker(board, player, move[0], move[1]))
                         )
                 return value
             
