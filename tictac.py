@@ -30,6 +30,7 @@ class TicTacToe:
             # + [list(row) for row in zip(*board)] # calc column
             # + [[board[i][i] for i in range(3)]] # diag 1
             # + [[board[i][2-i] for i in range(3)]] # diag 2
+            print(lines)
             if [1, 1, 1] in lines:
                 return 1 # 1 wins
             elif [-1, -1, -1] in lines:
@@ -38,10 +39,14 @@ class TicTacToe:
             
         def is_terminal(board): # returns True if a board is in it's last stage
             winner = eval_win(board)
+            print(winner)
             if winner == 0 and len(possible_moves(board)) == 0: # if no one has won and there are no more moves left, then draw
+                print('no moves draw', board)
                 return True
             elif winner == 0:
+                print('not terminal', board)
                 return False
+            print('winner', board)
             return True
         
         def possible_moves(board): # returns list of possible moves that player can make (x,y)
@@ -54,7 +59,7 @@ class TicTacToe:
         
         def minimax(player=self.player, board=self.board): # determines the best move
             if is_terminal(board):
-                print("Winner:", winner)
+                print("Winner:", winner, board)
                 return winner
             if player == 1: # GOAL: make game value large
                 value = float('-inf')
