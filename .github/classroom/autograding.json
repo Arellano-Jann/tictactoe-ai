@@ -1,0 +1,74 @@
+{
+  "tests": [
+    {
+      "name": "1",
+      "setup": "sudo -H pip install numpy",
+      "run": "python3 .tictac_test_1.py",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": null
+    },
+    {
+      "name": "2",
+      "setup": "sudo -H pip3 install numpy",
+      "run": "python3 .tictac_test_2.py",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": null
+    },
+    {
+      "name": "3",
+      "setup": "sudo -H pip3 install numpy",
+      "run": "python3 .tictac_test_3.py",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": null
+    },
+    {
+      "name": "4",
+      "setup": "sudo -H pip3 install numpy",
+      "run": "python3 .tictac_test_4.py",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": null
+    },
+    {
+      "name": "5",
+      "setup": "sudo -H pip3 install numpy",
+      "run": "python3 .tictac_test_5.py",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": null
+    },
+    {
+      "name": "6",
+      "setup": "sudo -H pip3 install numpy",
+      "run": "python3 .tictac_test_6.py",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": null
+    },
+    {
+      "name": "7",
+      "setup": "sudo -H pip3 install numpy",
+      "run": "python3 .tictac_test_7.py",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": null
+    }
+  ]
+}
