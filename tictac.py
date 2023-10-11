@@ -49,6 +49,7 @@ class TicTacToe:
                 for y in range(3):
                     if board[x][y] == 0:
                         move_list.append([x, y])
+            return move_list
         
         def minimax(player, board): # determines the best move
             if is_terminal(board):
