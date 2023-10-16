@@ -62,7 +62,7 @@ class TicTacToe:
                         move_list.append([x, y])
             return move_list
         
-        def minimax(player=self.player, board=self.board): # determines the best move
+        def minimax(player=self.player, board=self.board): # determines the best move by value
             if is_terminal(board):
                 print("Winner:63", winner, board)
                 # self.board = board
@@ -91,8 +91,27 @@ class TicTacToe:
                     board[move[0]][move[1]] = 0
                 return value
             
-        minimax()
-        return self.board, winner
+        def find_move(player=self.player, board=self.board):
+            best_value = float('-inf') if player == 1 else float('inf')
+            best_move = [0, 0]
+            
+            for move in possible_moves(board):
+                board[move[0]][move[1]] = player
+                value = minimax()
+                board[move[0]][move[1]] = 0
+                if (player == 1 and value > best_value) or (player == -1 and value < best_value):
+                    best_value = value
+                    best_move = move
+            return best_move
+                
+        def switch_player(): self.player = -1 if self.player == 1 else 1
+
+        while True:
+            if eval_win(self.board): # if non zero returns, then...
+                return self.board, winner
+            move = find_move()
+            self.board[move[0]][move[1]] = self.player
+            switch_player()
 
 def load_board( filename ):
     return np.loadtxt( filename)
