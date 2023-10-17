@@ -19,21 +19,10 @@ class TicTacToe:
         print (self.board)
 
     def play_game(self):
-        # TODO: some while loop
         winner = 0
-        # def place_marker(board, player, x, y):
-        #     # print(board, 'placemarker24')
-        #     if board[x][y] == 0: board[x][y] == player
-        #     return board
             
         def eval_win(board):
             lines = [row for row in board.tolist()] + [list(row) for row in zip(*board)] + [[board[i][i] for i in range(3)]] + [[board[i][2-i] for i in range(3)]]
-            # print('lineadd30','other>',[row.tolist() for row in board], [list(row) for row in zip(*board)], [[board[i][i] for i in range(3)]], [[board[i][2-i] for i in range(3)]])
-            # board # calc row
-            # + [list(row) for row in zip(*board)] # calc column
-            # + [[board[i][i] for i in range(3)]] # diag 1
-            # + [[board[i][2-i] for i in range(3)]] # diag 2
-            # print(lines, 'lines34', board, "board34")
             if [1, 1, 1] in lines:
                 return 1 # 1 wins
             elif [-1, -1, -1] in lines:
@@ -43,16 +32,10 @@ class TicTacToe:
         def is_terminal(board): # returns True if a board is in it's last stage
             nonlocal winner
             winner = eval_win(board)
-            # print(winner, "winner43 should match 63")
             if winner == 0 and (len(possible_moves(board)) == 0 or np.all(board != 0)): # if no one has won and there are no more moves left, then draw
-                # print('no moves draw45', board)
                 return True
             elif winner == 0:
-                # seems like it gets stuck here. i think it's bc len possible moves never gets evaluated to 0
-                # this may be because the board does not get updated as the moves get placed.
-                # print('not terminal48', board)
                 return False
-            # print('winner50', board, winner, '< should match 63')
             return True
         
         def possible_moves(board): # returns list of possible moves that player can make (x,y)
@@ -65,8 +48,6 @@ class TicTacToe:
         
         def minimax(player=self.player, board=self.board): # determines the best move by value
             if is_terminal(board):
-                # print(winner, "Winner:63\n", board)
-                # self.board = board
                 return winner
             if player == 1: # GOAL: make game value large
                 value = float('-inf')
@@ -75,10 +56,8 @@ class TicTacToe:
                     value = max(
                         value, 
                         minimax(-1, board)
-                        # minimax(-1, place_marker(board, player, move[0], move[1]))
                         )
                     board[move[0]][move[1]] = 0
-                # print(value, 'value80')
                 return value
             elif player == -1: # GOAL: make value smallest
                 value = float('inf')
@@ -87,7 +66,6 @@ class TicTacToe:
                     value = min(
                         value, 
                         minimax(1, board)
-                        # minimax(1, place_marker(board, player, move[0], move[1]))
                         )
                     board[move[0]][move[1]] = 0
                 return value
