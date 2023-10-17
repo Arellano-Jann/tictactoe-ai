@@ -10,6 +10,7 @@ class TicTacToe:
         else:
             self.board = board
         self.player = player
+        # print(self.board, self.player)
 
     def init_board(self):
         return np.array([[0,0,0],[0,0,0],[0,0,0]])
@@ -44,14 +45,14 @@ class TicTacToe:
             winner = eval_win(board)
             # print(winner, "winner43 should match 63")
             if winner == 0 and (len(possible_moves(board)) == 0 or np.all(board != 0)): # if no one has won and there are no more moves left, then draw
-                print('no moves draw45', board)
+                # print('no moves draw45', board)
                 return True
             elif winner == 0:
                 # seems like it gets stuck here. i think it's bc len possible moves never gets evaluated to 0
                 # this may be because the board does not get updated as the moves get placed.
-                print('not terminal48', board)
+                # print('not terminal48', board)
                 return False
-            print('winner50', board, winner, '< should match 63')
+            # print('winner50', board, winner, '< should match 63')
             return True
         
         def possible_moves(board): # returns list of possible moves that player can make (x,y)
@@ -64,7 +65,7 @@ class TicTacToe:
         
         def minimax(player=self.player, board=self.board): # determines the best move by value
             if is_terminal(board):
-                print("Winner:63", winner, board)
+                # print(winner, "Winner:63\n", board)
                 # self.board = board
                 return winner
             if player == 1: # GOAL: make game value large
