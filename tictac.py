@@ -22,16 +22,20 @@ class TicTacToe:
         winner = 0
             
         def eval_win(board):
+            nonlocal winner
             lines = [row for row in board.tolist()] + [list(row) for row in zip(*board)] + [[board[i][i] for i in range(3)]] + [[board[i][2-i] for i in range(3)]]
             if [1, 1, 1] in lines:
+                winner = 1
                 return 1 # 1 wins
             elif [-1, -1, -1] in lines:
+                winner = -1
                 return -1 # -1 wins
             return 0 # draw or no win. handled by len(possible_moves()) to see if it's a real draw
             
         def is_terminal(board): # returns True if a board is in it's last stage
-            nonlocal winner
+            # nonlocal winner
             winner = eval_win(board)
+            # eval_win(board)
             if winner == 0 and (len(possible_moves(board)) == 0 or np.all(board != 0)): # if no one has won and there are no more moves left, then draw
                 return True
             elif winner == 0:
@@ -55,6 +59,7 @@ class TicTacToe:
                     board[move[0]][move[1]] = 1
                     value = max(
                         value, 
+                        # minimax(-1)
                         minimax(-1, board)
                         )
                     board[move[0]][move[1]] = 0
@@ -65,6 +70,7 @@ class TicTacToe:
                     board[move[0]][move[1]] = -1
                     value = min(
                         value, 
+                        # minimax(1)
                         minimax(1, board)
                         )
                     board[move[0]][move[1]] = 0
@@ -76,6 +82,8 @@ class TicTacToe:
             
             for move in possible_moves(board):
                 board[move[0]][move[1]] = player
+                if eval_win(board):
+                    return move
                 value = minimax()
                 board[move[0]][move[1]] = 0
                 if (player == 1 and value > best_value) or (player == -1 and value < best_value):
@@ -86,9 +94,11 @@ class TicTacToe:
         def switch_player(): self.player = -1 if self.player == 1 else 1
 
         while True:
-            if eval_win(self.board): # if non zero returns, then...
-                return self.board, winner
-            move = find_move()
+            temp = self.board
+            if eval_win(temp): # if non zero returns, then...
+                return temp, winner
+            move = find_move(board=temp)
+            self.board = temp
             self.board[move[0]][move[1]] = self.player
             switch_player()
 
