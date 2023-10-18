@@ -36,7 +36,7 @@ class TicTacToe:
             # nonlocal winner
             winner = eval_win(board)
             # eval_win(board)
-            if winner == 0 and (len(possible_moves(board)) == 0 or np.all(board != 0)): # if no one has won and there are no more moves left, then draw
+            if winner == 0 and (len(possible_moves(board)) == 0): # if no one has won and there are no more moves left, then draw
                 return True
             elif winner == 0:
                 return False
@@ -59,8 +59,8 @@ class TicTacToe:
                     board[move[0]][move[1]] = 1
                     value = max(
                         value, 
-                        # minimax(-1)
-                        minimax(-1, board)
+                        minimax(-1)
+                        # minimax(-1, board)
                         )
                     board[move[0]][move[1]] = 0
                 return value
@@ -70,8 +70,8 @@ class TicTacToe:
                     board[move[0]][move[1]] = -1
                     value = min(
                         value, 
-                        # minimax(1)
-                        minimax(1, board)
+                        minimax(1)
+                        # minimax(1, board)
                         )
                     board[move[0]][move[1]] = 0
                 return value
@@ -82,7 +82,9 @@ class TicTacToe:
             
             for move in possible_moves(board):
                 board[move[0]][move[1]] = player
-                if eval_win(board):
+                # if eval_win(board):
+                #     return move
+                if is_terminal(board):
                     return move
                 value = minimax()
                 board[move[0]][move[1]] = 0
@@ -95,7 +97,7 @@ class TicTacToe:
 
         while True:
             temp = self.board
-            if eval_win(temp): # if non zero returns, then...
+            if is_terminal(temp): # if non zero returns, then...
                 return temp, winner
             move = find_move(board=temp)
             self.board = temp
