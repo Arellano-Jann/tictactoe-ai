@@ -10,6 +10,9 @@ class TicTacToe:
         else:
             self.board = board
         self.player = player
+        
+        self.winner = 0
+        # print(self.board, self.player)
 
     def init_board(self):
         return np.array([[0,0,0],[0,0,0],[0,0,0]])
@@ -18,36 +21,21 @@ class TicTacToe:
         print (self.board)
 
     def play_game(self):
-        # TODO: some while loop
-        winner = 0
-        def place_marker(board, player, x, y):
-            if board[x][y] == 0: board[x][y] == player
-            return board
             
         def eval_win(board):
-            lines = board + [list(row) for row in zip(*board)] + [[board[i][i] for i in range(3)]] + [[board[i][2-i] for i in range(3)]]
-            # board # calc row
-            # + [list(row) for row in zip(*board)] # calc column
-            # + [[board[i][i] for i in range(3)]] # diag 1
-            # + [[board[i][2-i] for i in range(3)]] # diag 2
-            print(lines)
+            lines = [row for row in board.tolist()] + [list(row) for row in zip(*board)] + [[board[i][i] for i in range(3)]] + [[board[i][2-i] for i in range(3)]]
             if [1, 1, 1] in lines:
                 return 1 # 1 wins
             elif [-1, -1, -1] in lines:
                 return -1 # -1 wins
-            return 0 # draw or no win. handled by len(possible_moves()) to see if it's a real draw
+            return 0 if not possible_moves(board) else None # draw else none
             
         def is_terminal(board): # returns True if a board is in it's last stage
-            winner = eval_win(board)
-            print(winner)
-            if winner == 0 and len(possible_moves(board)) == 0: # if no one has won and there are no more moves left, then draw
-                print('no moves draw', board)
+            self.winner = eval_win(board)
+            if self.winner: return True # if it returns a winner for a board
+            elif self.winner == 0: # draw
                 return True
-            elif winner == 0:
-                print('not terminal', board)
-                return False
-            print('winner', board)
-            return True
+            else: return False
         
         def possible_moves(board): # returns list of possible moves that player can make (x,y)
             move_list = []
@@ -57,29 +45,39 @@ class TicTacToe:
                         move_list.append([x, y])
             return move_list
         
-        def minimax(player=self.player, board=self.board): # determines the best move
-            if is_terminal(board):
-                print("Winner:", winner, board)
-                return winner
-            if player == 1: # GOAL: make game value large
-                value = float('-inf')
-                for move in possible_moves(board):
-                    value = max(
-                        value, 
-                        minimax(-1, place_marker(board, player, move[0], move[1]))
-                        )
-                return value
-            elif player == -1: # GOAL: make value smallest
-                value = float('inf')
-                for move in possible_moves(board):
-                    value = min(
-                        value, 
-                        minimax(1, place_marker(board, player, move[0], move[1]))
-                        )
-                return value
+        def minimax(player=self.player, board=self.board): # determines the best move by value
+            if is_terminal(board): # not acc sure if this is needed but need more testcases to determine that
+                return self.winner
             
-        minimax()
-        return self.board, winner
+            best_value = float('inf') * -player
+            best_move = None
+            
+            for move in possible_moves(board):
+                board[move[0]][move[1]] = player # Do move
+                
+                if is_terminal(board): # Check for instant win
+                    winner = eval_win(board)
+                    board[move[0]][move[1]] = 0 # Undo move so that it doesn't propagate
+                    return winner, move
+                
+                value, _ = minimax(-player) # recursive call to get the value of a board
+                
+                
+                if (player == 1 and value > best_value) or (player == -1 and value < best_value): # return best move and best value
+                    best_value, best_move = value, move
+                    
+                board[move[0]][move[1]] = 0 # Undo move
+                
+            return best_value, best_move
+                
+        def switch_player(): self.player = -self.player
+
+        while True:
+            if eval_win(self.board) is not None: # if non zero returns, then...
+                return self.board, eval_win(self.board)
+            _, move = minimax()
+            self.board[move[0]][move[1]] = self.player
+            switch_player()
 
 def load_board( filename ):
     return np.loadtxt( filename)
