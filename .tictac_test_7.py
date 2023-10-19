@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from tictac import TicTacToe
+# from test import TicTacToe
 import unittest
 import numpy as np
 

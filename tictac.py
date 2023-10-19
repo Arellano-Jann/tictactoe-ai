@@ -10,6 +10,8 @@ class TicTacToe:
         else:
             self.board = board
         self.player = player
+        
+        self.winner = 0
         # print(self.board, self.player)
 
     def init_board(self):
@@ -19,28 +21,21 @@ class TicTacToe:
         print (self.board)
 
     def play_game(self):
-        winner = 0
             
         def eval_win(board):
-            nonlocal winner
             lines = [row for row in board.tolist()] + [list(row) for row in zip(*board)] + [[board[i][i] for i in range(3)]] + [[board[i][2-i] for i in range(3)]]
             if [1, 1, 1] in lines:
-                winner = 1
                 return 1 # 1 wins
             elif [-1, -1, -1] in lines:
-                winner = -1
                 return -1 # -1 wins
-            return 0 # draw or no win. handled by len(possible_moves()) to see if it's a real draw
+            return 0 if not possible_moves(board) else None # draw else none
             
         def is_terminal(board): # returns True if a board is in it's last stage
-            # nonlocal winner
-            winner = eval_win(board)
-            # eval_win(board)
-            if winner == 0 and (len(possible_moves(board)) == 0): # if no one has won and there are no more moves left, then draw
+            self.winner = eval_win(board)
+            if self.winner: return True # if it returns a winner for a board
+            elif self.winner == 0: # draw
                 return True
-            elif winner == 0:
-                return False
-            return True
+            else: return False
         
         def possible_moves(board): # returns list of possible moves that player can make (x,y)
             move_list = []
@@ -51,56 +46,36 @@ class TicTacToe:
             return move_list
         
         def minimax(player=self.player, board=self.board): # determines the best move by value
-            if is_terminal(board):
-                return winner
-            if player == 1: # GOAL: make game value large
-                value = float('-inf')
-                for move in possible_moves(board):
-                    board[move[0]][move[1]] = 1
-                    value = max(
-                        value, 
-                        minimax(-1)
-                        # minimax(-1, board)
-                        )
-                    board[move[0]][move[1]] = 0
-                return value
-            elif player == -1: # GOAL: make value smallest
-                value = float('inf')
-                for move in possible_moves(board):
-                    board[move[0]][move[1]] = -1
-                    value = min(
-                        value, 
-                        minimax(1)
-                        # minimax(1, board)
-                        )
-                    board[move[0]][move[1]] = 0
-                return value
+            if is_terminal(board): # not acc sure if this is needed but need more testcases to determine that
+                return self.winner
             
-        def find_move(player=self.player, board=self.board):
-            best_value = float('-inf') if player == 1 else float('inf')
-            best_move = [0, 0]
+            best_value = float('inf') * -player
+            best_move = None
             
             for move in possible_moves(board):
-                board[move[0]][move[1]] = player
-                # if eval_win(board):
-                #     return move
-                if is_terminal(board):
-                    return move
-                value = minimax()
-                board[move[0]][move[1]] = 0
-                if (player == 1 and value > best_value) or (player == -1 and value < best_value):
-                    best_value = value
-                    best_move = move
-            return best_move
+                board[move[0]][move[1]] = player # Do move
                 
-        def switch_player(): self.player = -1 if self.player == 1 else 1
+                if is_terminal(board): # Check for instant win
+                    winner = eval_win(board)
+                    board[move[0]][move[1]] = 0 # Undo move so that it doesn't propagate
+                    return winner, move
+                
+                value, _ = minimax(-player) # recursive call to get the value of a board
+                
+                
+                if (player == 1 and value > best_value) or (player == -1 and value < best_value): # return best move and best value
+                    best_value, best_move = value, move
+                    
+                board[move[0]][move[1]] = 0 # Undo move
+                
+            return best_value, best_move
+                
+        def switch_player(): self.player = -self.player
 
         while True:
-            temp = self.board
-            if is_terminal(temp): # if non zero returns, then...
-                return temp, winner
-            move = find_move(board=temp)
-            self.board = temp
+            if eval_win(self.board) is not None: # if non zero returns, then...
+                return self.board, eval_win(self.board)
+            _, move = minimax()
             self.board[move[0]][move[1]] = self.player
             switch_player()
 

@@ -19,6 +19,9 @@ c:
 c2:
 	make 1 3 5 6
 
+c1:
+	make 1 2 3 4 5 6
+
 all:
 	python3 .tictac_test_1.py
 	python3 .tictac_test_2.py
